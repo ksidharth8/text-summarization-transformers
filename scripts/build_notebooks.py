@@ -19,7 +19,7 @@ from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SRC_FILES = ["__init__.py", "preprocessing.py", "extractive.py", "metrics.py", "summarizer.py"]
-REPO = "https://github.com/redcode333/text-summarization-transformers"
+REPO = "https://github.com/ksidharth8/text-summarization-transformers"
 
 
 def read(rel: str) -> str:
@@ -59,7 +59,7 @@ code = lambda s: TRAIN.append(("code", s.strip()))  # noqa: E731
 md(r'''
 # Text Summarization with Transformers — fine-tuning BART on CNN/DailyMail
 
-**Deep Learning course project** · Abhinav Anand · B.Tech AI & ML, BIT Mesra · [github.com/redcode333/text-summarization-transformers](https://github.com/redcode333/text-summarization-transformers)
+**Deep Learning course project** · Abhinav Anand · B.Tech AI & ML, BIT Mesra · [github.com/ksidharth8/text-summarization-transformers](https://github.com/ksidharth8/text-summarization-transformers)
 
 Self-contained training + evaluation pipeline. It compares **extractive** summarizers (LEAD-3, TextRank, transformer-embedding MMR) with an **abstractive** transformer (`facebook/bart-base`, fine-tuned here).
 
@@ -416,8 +416,17 @@ def preprocess(batch):
 
 def tokenize(df, name):
     ds = Dataset.from_pandas(df[["article", "highlights"]].reset_index(drop=True), preserve_index=False)
-    return ds.map(preprocess, batched=True, batch_size=1000, num_proc=NUM_PROC if len(df) > 5000 else None,
-                  remove_columns=ds.column_names, desc=f"tokenize {name}")
+    nproc = NUM_PROC if len(df) > 5000 else None
+    print(f"tokenizing {name}: {len(df):,} examples with {nproc or 1} process(es) ...", flush=True)
+    try:
+        return ds.map(preprocess, batched=True, batch_size=1000, num_proc=nproc, remove_columns=ds.column_names,
+                      desc=f"tokenize {name}")
+    except Exception as e:                      # safety net: parallel map failed -> single process (~4x slower)
+        if not nproc:
+            raise
+        print(f"parallel tokenization failed ({repr(e)[:200]}) -> retrying in one process", flush=True)
+        return ds.map(preprocess, batched=True, batch_size=1000, remove_columns=ds.column_names,
+                      desc=f"tokenize {name}")
 
 
 t0 = time.time()
@@ -609,7 +618,7 @@ SUMMARIZER_META = dict(
     dataset="CNN/DailyMail 3.0.0 (Kaggle: gowrishankarp/newspaper-text-summarization-cnn-dailymail)",
     steps=TRAIN_INFO["steps_completed"], samples_seen=TRAIN_INFO["samples_seen"],
     train_hours=TRAIN_INFO["train_runtime_hours"], created=datetime.datetime.now().isoformat(timespec="seconds"),
-    project="https://github.com/redcode333/text-summarization-transformers")
+    project="https://github.com/ksidharth8/text-summarization-transformers")
 with open(os.path.join(MODEL_DIR, "summarizer_config.json"), "w") as f:
     json.dump(SUMMARIZER_META, f, indent=2)
 MODEL_ZIP = zip_dir(MODEL_DIR)
@@ -845,7 +854,7 @@ def to_jsonable(o):
 
 METRICS = dict(
     project=dict(title="Text Summarization with Transformers (CNN/DailyMail)", author="Abhinav Anand",
-                 repo="https://github.com/redcode333/text-summarization-transformers"),
+                 repo="https://github.com/ksidharth8/text-summarization-transformers"),
     run_mode=RUN_MODE, timestamp=datetime.datetime.now().isoformat(timespec="seconds"), model_name=CFG["model_name"],
     config=CFG, environment=ENV,
     data=dict(files=DATA_FILES, split_sizes=SPLIT_SIZES, dropped=DROPPED,
@@ -878,7 +887,7 @@ datasets: [cnn_dailymail]
 # {MODEL_TAG} fine-tuned on CNN/DailyMail
 
 Abstractive news summarizer from the project
-[text-summarization-transformers](https://github.com/redcode333/text-summarization-transformers) (Abhinav Anand, BIT Mesra).
+[text-summarization-transformers](https://github.com/ksidharth8/text-summarization-transformers) (Abhinav Anand, BIT Mesra).
 
 **Test set ({N_TEST:,} articles):** ROUGE-1 {ft['rouge1']:.2f} · ROUGE-2 {ft['rouge2']:.2f} · ROUGE-L {ft['rougeL']:.2f} · ROUGE-Lsum {ft['rougeLsum']:.2f}
 
@@ -959,7 +968,7 @@ import os, re, sys, glob, json, time, zipfile, subprocess
 
 MODEL_DIR = os.environ.get("SUMM_MODEL_DIR")   # None -> auto-detect
 FALLBACK_MODEL = None                          # e.g. "facebook/bart-large-cnn" to try the notebook before your model exists
-REPO_URL = "https://github.com/redcode333/text-summarization-transformers"
+REPO_URL = "https://github.com/ksidharth8/text-summarization-transformers"
 SEARCH_ROOTS = ["/kaggle/input", "/kaggle/working", "models", "../models", "outputs", "../outputs"]
 
 

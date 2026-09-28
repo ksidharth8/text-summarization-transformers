@@ -80,7 +80,7 @@ git init
 git add .
 git commit -m "Text summarization with transformers: notebooks, src, tests, app"
 git branch -M main
-git remote add origin https://github.com/redcode333/text-summarization-transformers.git
+git remote add origin https://github.com/ksidharth8/text-summarization-transformers.git
 git push -u origin main
 ```
 
