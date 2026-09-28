@@ -17,3 +17,4 @@ __pycache__/
 venv/
 .env
 .DS_Store
+bart-base-cnn-summarizer/

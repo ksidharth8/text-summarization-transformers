@@ -5,7 +5,8 @@ A pre-trained encoder–decoder transformer (**BART-base**) is fine-tuned on the
 three extractive baselines (LEAD-3, TextRank, transformer-embedding MMR). Documents longer than the model's input
 window (e.g. research papers) are handled by hierarchical *map-reduce* summarization.
 
-**Author:** Abhinav Anand · B.Tech AI & ML, BIT Mesra · [github.com/redcode333](https://github.com/redcode333)
+**Author:** Kumar Sidharth · B.Tech CSE, BIT Mesra · [github.com/ksidharth8](https://github.com/ksidharth8)
+
 **Dataset:** [Kaggle – newspaper-text-summarization-cnn-dailymail](https://www.kaggle.com/datasets/gowrishankarp/newspaper-text-summarization-cnn-dailymail) (CNN/DailyMail 3.0.0: ≈287k train / 13k validation / 11.5k test)
 
 ---
@@ -13,33 +14,53 @@ window (e.g. research papers) are handled by hierarchical *map-reduce* summariza
 ## Results
 
 <!-- RESULTS:START -->
-*Filled in after the full Kaggle run: copy `results/results_table.md` from the notebook output here.*
+Full CNN/DailyMail test set (11,490 articles) · ROUGE F1 × 100 with Porter stemming · ± = half-width of the 95% bootstrap confidence interval.
 
 | System | ROUGE-1 | ROUGE-2 | ROUGE-L | ROUGE-Lsum | avg. words |
 |---|---|---|---|---|---|
-| LEAD-3 | – | – | – | – | – |
-| TextRank | – | – | – | – | – |
-| MiniLM embedding + MMR | – | – | – | – | – |
-| bart-base zero-shot (no fine-tuning, n=500) | – | – | – | – | – |
-| **bart-base fine-tuned (ours)** | – | – | – | – | – |
+| LEAD-3 | 40.17 ± 0.22 | 17.56 ± 0.21 | 25.09 ± 0.19 | 36.48 ± 0.21 | 77.2 |
+| TextRank | 35.80 ± 0.20 | 14.36 ± 0.18 | 23.10 ± 0.16 | 32.17 ± 0.19 | 85.7 |
+| MiniLM embedding + MMR | 34.57 ± 0.20 | 12.18 ± 0.18 | 21.24 ± 0.16 | 30.92 ± 0.20 | 78.5 |
+| BART-base zero-shot (no fine-tuning, n = 500) | 37.09 ± 0.83 | 17.05 ± 0.87 | 23.34 ± 0.77 | 34.31 ± 0.84 | 112.5 |
+| **BART-base fine-tuned (ours)** | **42.16 ± 0.23** | **19.47 ± 0.24** | **28.97 ± 0.22** | **39.13 ± 0.23** | 62.3 |
 <!-- RESULTS:END -->
 
-ROUGE F1 × 100 on the full test set (11,490 articles), Porter stemming, 95% bootstrap confidence intervals in `results/metrics.json`.
-**ROUGE-Lsum** is the summary-level ROUGE-L that papers report as "ROUGE-L" for CNN/DailyMail.
+**ROUGE-Lsum** is the summary-level ROUGE-L that papers report as "ROUGE-L" on CNN/DailyMail; plain ROUGE-L treats the whole summary as one sequence and is always lower. Every number, confidence interval, significance test and the full training log are in [`results/metrics.json`](results/metrics.json); outputs for texts outside the dataset are in [`results/custom_cases.md`](results/custom_cases.md).
 
-Published numbers for context (ROUGE-1 / 2 / L):
+![ROUGE comparison](results/figures/fig_rouge_comparison.png)
+
+**Comparison with published results** (ROUGE-1 / 2 / L, where L is summary-level):
 
 | Model | Type | R-1 | R-2 | R-L |
 |---|---|---|---|---|
 | LEAD-3 (See et al., 2017) | extractive baseline | 40.34 | 17.70 | 36.57 |
+| LEAD-3 (ours) | extractive baseline | 40.17 | 17.56 | 36.48 |
 | Pointer-Generator + coverage (See et al., 2017) | abstractive (RNN) | 39.53 | 17.28 | 36.38 |
 | BertSumExtAbs (Liu & Lapata, 2019) | abstractive | 42.13 | 19.60 | 39.18 |
+| **BART-base fine-tuned (ours)** | abstractive | **42.16** | **19.47** | **39.13** |
 | MatchSum (Zhong et al., 2020) | extractive | 44.41 | 20.86 | 40.55 |
 | T5-11B (Raffel et al., 2020) | abstractive | 43.52 | 21.55 | 40.69 |
 | BART-large (Lewis et al., 2020) | abstractive | 44.16 | 21.28 | 40.90 |
 | PEGASUS-large (Zhang et al., 2020) | abstractive | 44.17 | 21.47 | 41.11 |
 
-BART-base has about a third of BART-large's parameters and is trained here with 512 input tokens (instead of 1024) for a few hours on free GPUs, so its scores are expected to land below BART-large but clearly above RNN models. Check the zero-shot row: without fine-tuning the model just copies its input.
+Our LEAD-3 is within 0.2 points of the published LEAD-3, so the evaluation setup is comparable. With ≈140 M parameters, a 512-token input and about one epoch of training on free GPUs, BART-base reaches the level of BertSumExtAbs and beats the Pointer-Generator by 2.6 ROUGE-1; it stays 2.0 points below BART-large (≈400 M parameters, 1,024-token input).
+
+### What the results show
+
+- **Fine-tuning gives a significant gain over the strongest baseline.** Paired bootstrap on all 11,490 test articles, fine-tuned minus LEAD-3: ROUGE-1 +1.99 (95% CI +1.79 to +2.19), ROUGE-2 +1.90 (95% CI +1.71 to +2.12), ROUGE-Lsum +2.65 (95% CI +2.44 to +2.84). None of the 1,000 resamples favoured LEAD-3 (p < 0.001).
+- **The pre-trained model alone is not a summarizer.** On the same 500 articles, zero-shot BART-base scores 37.09 ROUGE-1 against 41.22 after fine-tuning and 40.10 for LEAD-3. It was only trained to reconstruct text, so it copies the start of the article (112.5 words, 5.25 sentences on average); fine-tuning teaches it to select and compress (62.3 words).
+- **News has a strong lead bias.** LEAD-3 beats both unsupervised extractive methods by 4.4–5.6 ROUGE-1. TextRank (centrality) and the embedding method (similarity to the whole article) pick sentences from anywhere, while CNN/DailyMail highlights mostly come from the opening paragraphs.
+- **The model is mostly extractive.** 7.25% of its bigrams and 19.44% of its 4-grams do not occur in the article, versus 50.21% and 79.72% for the human highlights: it shortens and merges source sentences rather than paraphrasing.
+- **Longer articles are harder for every system.** ROUGE-1 drops from 44.57 (shortest quartile, 55-415 words) to 39.91 (longest, 866-1881 words). LEAD-3, which never reads past sentence 3, drops by a similar amount (42.46 → 37.75), so this reflects harder articles rather than the 512-token truncation alone; the advantage over LEAD-3 stays at about +2 in every quartile (+2.11, +1.76, +1.93, +2.16).
+- **Training and cost.** The 4.5 h time budget ended training at step 9,496 of 26,919 planned (1.058 epochs, 303,872 articles, 18.76 articles/s on 2 × T4); the learning rate had annealed to ≈0 as designed. Validation loss (label-smoothed) fell from 9.57 to 6.57 in the first 1,000 steps and only to 6.21 by the end, so extra epochs would add little. Summarizing the test set took 43 min (4.42 articles/s, 4 beams, one T4); the whole notebook ran in 5.62 h.
+
+![Training curves](results/figures/fig_training_curves.png)
+
+![Abstractiveness and ROUGE by article length](results/figures/fig_novelty_and_length.png)
+
+### Texts outside the dataset
+
+On the four original test texts in `test_cases/` ([outputs](results/custom_cases.md)), the summaries are fluent and every statement is supported by the source, but the model keeps the news habit of building the summary from the opening sentences, trimming clauses such as "officials said on Monday". Two weaknesses are visible. For the flood-warning article it skipped the key first sentence (what the system does). For the 838-word paper (3 chunks in long-document mode), the final summary kept the title, motivation and conclusion but dropped the latency results that the first chunk summary contained.
 
 ---
 
@@ -93,7 +114,7 @@ The trained model is **not** committed (≈560 MB; GitHub's file limit is 100 MB
 2. Right panel → **Add Input** → search `newspaper-text-summarization-cnn-dailymail` (by *gowrishankarp*) → **Add**.
 3. **Settings → Accelerator → GPU T4 x2**, and **Internet → On** (both need a phone-verified Kaggle account). The internet is only used to download `facebook/bart-base` and `all-MiniLM-L6-v2` from Hugging Face.
 4. **Smoke test** (≈10–15 min): keep `RUN_MODE = "smoke"` and press **Run All**. Every step runs on small subsets; the last cell prints *SMOKE RUN FINISHED*. The scores are meaningless here — the point is that nothing crashes.
-5. **Full run**: change the line to `RUN_MODE = "full"` → **Save Version** → **Save & Run All (Commit)** → *Save*. It runs in the background (≈5.5–6.5 h; training itself is capped at `train_hours = 4.5`). You can close the tab; follow progress under *View Logs*.
+5. **Full run**: change the line to `RUN_MODE = "full"` → **Save Version** → **Save & Run All (Commit)** → *Save*. It runs in the background (measured: 5.6 h in total — about 20 min data preparation and baselines, 4.5 h training, 45 min evaluation). You can close the tab; follow progress under *View Logs*.
 6. When the version shows *Complete*: open it → **Output** → download
    - `bart-base-cnn-summarizer.zip` (the model),
    - `results/` (`metrics.json`, `results_table.md`, `custom_cases.md`, `test_predictions.csv`, `figures/`).
@@ -150,7 +171,9 @@ The saved folder is a standard Hugging Face model, so `transformers.pipeline("su
 
 ## How it works
 
-**Data.** CSVs are discovered automatically; rows with missing text or articles under 20 words are dropped. `clean_article` removes scraping boilerplate at the top of articles (`By . Daily Mail Reporter . PUBLISHED: . 14:11 EST, 25 October 2013 .`, `LONDON, England (CNN) --`, "Scroll down for video"). References are only whitespace-normalised. The notebook reports length statistics, the share of articles longer than the 512-token window, and how abstractive the reference summaries are (novel n-grams).
+**Data.** CSVs are discovered automatically; rows with missing text or articles under 20 words are dropped. `clean_article` removes scraping boilerplate at the top of articles (`By . Daily Mail Reporter . PUBLISHED: . 14:11 EST, 25 October 2013 .`, `LONDON, England (CNN) --`, "Scroll down for video"). References are only whitespace-normalised. The notebook reports length statistics, the share of articles longer than the 512-token window, and how abstractive the reference summaries are (novel n-grams). Articles average 674 words (858 BART tokens) and 78.4% are longer than the 512-token input; the highlights average 47.9 words in 3.81 sentences (15.6× compression).
+
+![Length distributions](results/figures/fig_lengths.png)
 
 **Extractive baselines.**
 - *LEAD-3* — first three sentences (news follows the inverted-pyramid style, so this is hard to beat).
@@ -210,7 +233,7 @@ pytest -q                            # unit tests (cleaning, TextRank, MMR, ROUG
 python scripts/build_notebooks.py    # after editing src/ or test_cases/
 ```
 
-The notebooks were verified end-to-end on CPU with tiny stand-in models and synthetic CNN/DailyMail-style data (transformers 5.17, datasets 5.0). Version differences are handled in the notebook (`eval_strategy`/`evaluation_strategy`, `processing_class`/`tokenizer`), so transformers ≥ 4.46 should work as well.
+The full pipeline ran on Kaggle (2 × Tesla T4, Python 3.12, torch 2.10, transformers 5.0.0, datasets 5.0.0) in 5.62 h; the notebooks are also tested end-to-end on CPU with tiny stand-in models (transformers 5.17). Version differences are handled in the notebook (`eval_strategy`/`evaluation_strategy`, `processing_class`/`tokenizer`), so transformers ≥ 4.46 should work as well.
 
 ## References
 

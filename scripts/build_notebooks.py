@@ -59,7 +59,7 @@ code = lambda s: TRAIN.append(("code", s.strip()))  # noqa: E731
 md(r'''
 # Text Summarization with Transformers — fine-tuning BART on CNN/DailyMail
 
-**Deep Learning course project** · Abhinav Anand · B.Tech AI & ML, BIT Mesra · [github.com/ksidharth8/text-summarization-transformers](https://github.com/ksidharth8/text-summarization-transformers)
+**Deep Learning course project** · Kumar Sidharth · B.Tech CSE, BIT Mesra · [github.com/ksidharth8/text-summarization-transformers](https://github.com/ksidharth8/text-summarization-transformers)
 
 Self-contained training + evaluation pipeline. It compares **extractive** summarizers (LEAD-3, TextRank, transformer-embedding MMR) with an **abstractive** transformer (`facebook/bart-base`, fine-tuned here).
 
@@ -114,7 +114,7 @@ CFG = dict(
     gen_batch=32, num_beams=4, max_new_tokens=142, min_new_tokens=56, length_penalty=2.0, no_repeat_ngram_size=3,
     # evaluation extras
     zero_shot_samples=500, novelty_samples=2000, run_embed_extractive=True, n_examples=5,
-    push_to_hub=False, hub_repo="redcode333/bart-base-cnn-dailymail",   # needs a Kaggle secret named HF_TOKEN
+    push_to_hub=False, hub_repo="ksidharth8/bart-base-cnn-dailymail",   # needs a Kaggle secret named HF_TOKEN
 )
 SMOKE = dict(train_samples=2000, val_samples=200, test_samples=200, epochs=1, train_hours=0.12, warmup_steps=20,
              eval_every=40, log_every=10, zero_shot_samples=40, novelty_samples=200)
@@ -734,11 +734,12 @@ for i, k in enumerate(SYSTEMS):
     ax.bar_label(bars, fmt="%.1f", fontsize=7, padding=2)
 ax.set_xticks(x, [n for _, n in mets])
 ax.set_ylabel("F1 × 100")
+ax.set_ylim(0, max(RESULTS[k][m + "_ci"][1] for k in SYSTEMS for m, _ in mets) * 1.1)
 ax.set_title("ROUGE on the CNN/DailyMail test set (error bars: 95% bootstrap CI)")
-ax.legend(fontsize=8, loc="upper right")
+ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.08), ncol=3, frameon=False)
 fig.tight_layout()
 FIGURES["rouge"] = "results/figures/fig_rouge_comparison.png"
-fig.savefig(os.path.join(WORK_DIR, FIGURES["rouge"]), dpi=150)
+fig.savefig(os.path.join(WORK_DIR, FIGURES["rouge"]), dpi=150, bbox_inches="tight")
 plt.show()
 
 fig, ax = plt.subplots(1, 2, figsize=(13, 4))
@@ -756,14 +757,16 @@ if BY_LENGTH:
     xs = np.arange(len(bl))
     cols = [k for k in ("lead3", "textrank", "finetuned") if k in bl]
     for i, k in enumerate(cols):
-        ax[1].bar(xs + (i - (len(cols) - 1) / 2) * 0.27, bl[k], 0.27, color=COLORS[k], label=DISPLAY_NAMES[k])
+        bars = ax[1].bar(xs + (i - (len(cols) - 1) / 2) * 0.27, bl[k], 0.27, color=COLORS[k], label=DISPLAY_NAMES[k])
+        ax[1].bar_label(bars, fmt="%.1f", fontsize=7, padding=2)
     ax[1].set_xticks(xs, bl["bucket"], fontsize=8)
+    ax[1].set_ylim(0, float(bl[cols].to_numpy().max()) * 1.12)
     ax[1].set_ylabel("ROUGE-1")
     ax[1].set_title("ROUGE-1 by article length (test quartiles)")
-    ax[1].legend(fontsize=8)
+    ax[1].legend(fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=3, frameon=False)
 fig.tight_layout()
 FIGURES["novelty_length"] = "results/figures/fig_novelty_and_length.png"
-fig.savefig(os.path.join(WORK_DIR, FIGURES["novelty_length"]), dpi=150)
+fig.savefig(os.path.join(WORK_DIR, FIGURES["novelty_length"]), dpi=150, bbox_inches="tight")
 plt.show()
 ''')
 
@@ -853,7 +856,7 @@ def to_jsonable(o):
 
 
 METRICS = dict(
-    project=dict(title="Text Summarization with Transformers (CNN/DailyMail)", author="Abhinav Anand",
+    project=dict(title="Text Summarization with Transformers (CNN/DailyMail)", author="Kumar Sidharth",
                  repo="https://github.com/ksidharth8/text-summarization-transformers"),
     run_mode=RUN_MODE, timestamp=datetime.datetime.now().isoformat(timespec="seconds"), model_name=CFG["model_name"],
     config=CFG, environment=ENV,
@@ -887,7 +890,7 @@ datasets: [cnn_dailymail]
 # {MODEL_TAG} fine-tuned on CNN/DailyMail
 
 Abstractive news summarizer from the project
-[text-summarization-transformers](https://github.com/ksidharth8/text-summarization-transformers) (Abhinav Anand, BIT Mesra).
+[text-summarization-transformers](https://github.com/ksidharth8/text-summarization-transformers) (Kumar Sidharth, BIT Mesra).
 
 **Test set ({N_TEST:,} articles):** ROUGE-1 {ft['rouge1']:.2f} · ROUGE-2 {ft['rouge2']:.2f} · ROUGE-L {ft['rougeL']:.2f} · ROUGE-Lsum {ft['rougeLsum']:.2f}
 
@@ -959,6 +962,8 @@ Loads the model produced by `01_train_bart_cnn_dailymail.ipynb` and summarizes c
 * **Kaggle:** create a new notebook → *Add Input* → *Notebook Output Files* → select your training notebook. The model folder, `src/` and `test_cases/` are all in its output.
 * **Local / Colab:** clone the repo, unzip `bart-base-cnn-summarizer.zip` into `models/`, open this notebook from `notebooks/`.
 * Or set the environment variable `SUMM_MODEL_DIR` / the variable `MODEL_DIR` below.
+
+**Your own inputs:** paste them into the `MY_TEXTS` cell near the end (any number of texts), or — locally — save them as `.txt` files in `test_cases/`.
 
 CPU is fine for a few texts (≈5–20 s per summary); a GPU is faster.
 ''')
@@ -1077,20 +1082,28 @@ for name, out in LONG_RESULTS.items():
 ''')
 
 code2(r'''
-# Try your own text -------------------------------------------------------------------------------
-MY_TEXT = """Paste any news article, report or paper section here. Longer texts are summarized in several
-chunks automatically. The summary length adapts to the input length for short texts."""
-_ = compare(MY_TEXT, "my text")
+# Try your own texts ------------------------------------------------------------------------------
+# Add as many entries as you like (name -> text). Texts longer than ~500 tokens are summarized in
+# chunks automatically; for short texts the summary length adapts to the input length.
+MY_TEXTS = {
+    "my_text_1": """Paste a news article, report or paper section here (at least 20 words).""",
+    # "my_text_2": """Another text ...""",
+}
+for _name, _text in MY_TEXTS.items():
+    if len(_text.split()) < 20:
+        print(f"{_name}: skipped - paste at least 20 words")
+        continue
+    compare(_text, _name)
 
-# Decoding can be changed per call, e.g. shorter and more focused:
-# summarizer.summarize(MY_TEXT, num_beams=6, max_new_tokens=60, min_new_tokens=20, length_penalty=1.0)
+# Decoding can be changed per call, e.g. shorter summaries:
+# summarizer.summarize(MY_TEXTS["my_text_1"], num_beams=6, max_new_tokens=60, min_new_tokens=20, length_penalty=1.0)
 ''')
 
 code2(r'''
 # Optional: quick ROUGE check on a few CNN/DailyMail test articles (if the dataset is attached)
 EVAL_SAMPLES = 100
 _root = os.environ.get("SUMM_DATA_DIR", "/kaggle/input")
-_csvs = [p for p in glob.glob(os.path.join(_root, "**", "*.csv"), recursive=True) if "test" in os.path.basename(p).lower()]
+_csvs = [p for p in glob.glob(os.path.join(_root, "**", "*.csv"), recursive=True) if "test" in os.path.basename(p).lower() and "prediction" not in os.path.basename(p).lower()]
 _csvs = [p for p in _csvs if re.search(r"cnn|dailymail", p, re.I)] or _csvs
 try:
     import re

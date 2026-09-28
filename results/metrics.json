@@ -1,0 +1,1403 @@
+{
+  "project": {
+    "title": "Text Summarization with Transformers (CNN/DailyMail)",
+    "author": "Kumar Sidharth",
+    "repo": "https://github.com/ksidharth8/text-summarization-transformers"
+  },
+  "run_mode": "full",
+  "timestamp": "2026-09-28T16:58:02",
+  "model_name": "facebook/bart-base",
+  "config": {
+    "model_name": "facebook/bart-base",
+    "embed_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "seed": 42,
+    "train_samples": null,
+    "val_samples": 2000,
+    "test_samples": null,
+    "max_source_len": 512,
+    "max_target_len": 128,
+    "epochs": 3,
+    "train_hours": 4.5,
+    "lr": 5e-05,
+    "weight_decay": 0.01,
+    "warmup_steps": 500,
+    "label_smoothing": 0.1,
+    "max_grad_norm": 1.0,
+    "per_device_batch": 16,
+    "effective_batch": 32,
+    "fp16": true,
+    "eval_every": 1000,
+    "log_every": 100,
+    "gen_batch": 32,
+    "num_beams": 4,
+    "max_new_tokens": 142,
+    "min_new_tokens": 56,
+    "length_penalty": 2.0,
+    "no_repeat_ngram_size": 3,
+    "zero_shot_samples": 500,
+    "novelty_samples": 2000,
+    "run_embed_extractive": true,
+    "n_examples": 5,
+    "push_to_hub": false,
+    "hub_repo": "redcode333/bart-base-cnn-dailymail"
+  },
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "transformers": "5.0.0",
+    "datasets": "5.0.0",
+    "numpy": "2.0.2",
+    "pandas": "2.3.3",
+    "cuda": "12.8",
+    "gpu": "Tesla T4 x2",
+    "cpus": 4
+  },
+  "data": {
+    "files": {
+      "train": "/kaggle/input/datasets/gowrishankarp/newspaper-text-summarization-cnn-dailymail/cnn_dailymail/train.csv",
+      "validation": "/kaggle/input/datasets/gowrishankarp/newspaper-text-summarization-cnn-dailymail/cnn_dailymail/validation.csv",
+      "test": "/kaggle/input/datasets/gowrishankarp/newspaper-text-summarization-cnn-dailymail/cnn_dailymail/test.csv"
+    },
+    "split_sizes": {
+      "train": 287110,
+      "validation": 13368,
+      "test": 11490
+    },
+    "dropped": {
+      "train": 3,
+      "validation": 0,
+      "test": 0
+    },
+    "used": {
+      "train": 287110,
+      "validation": 2000,
+      "test": 11490
+    },
+    "stats": {
+      "eda_sample": 20000,
+      "article_words_mean": 674.0,
+      "article_words_median": 613.0,
+      "article_words_p95": 1334.0,
+      "summary_words_mean": 47.9,
+      "summary_sentences_mean": 3.81,
+      "compression_ratio": 15.6,
+      "article_tokens_mean": 858.3,
+      "pct_articles_over_max_source_len": 78.4,
+      "reference_novel_ngrams": {
+        "1": 13.79,
+        "2": 50.21,
+        "3": 70.06,
+        "4": 79.72
+      }
+    },
+    "cleaning_example": {
+      "before": "(CNN)So, you'd like a \"Full House\" reunion and spinoff? You got it, dude! Co-star John Stamos announced Monday night on \"Jimmy Kimmel Live\" that Netflix has ordered up a reunion special, followed by a spinoff series called \"Fuller House.\" The show wi",
+      "after": "So, you'd like a \"Full House\" reunion and spinoff? You got it, dude! Co-star John Stamos announced Monday night on \"Jimmy Kimmel Live\" that Netflix has ordered up a reunion special"
+    }
+  },
+  "training": {
+    "params_million": 139.4,
+    "n_gpu": 2,
+    "gpu": "Tesla T4 x2",
+    "fp16": true,
+    "per_device_batch": 16,
+    "grad_accum": 1,
+    "effective_batch": 32,
+    "epochs_planned": 3,
+    "steps_per_epoch": 8973,
+    "total_steps_planned": 26919,
+    "steps_completed": 9496,
+    "epochs_completed": 1.058,
+    "samples_seen": 303872,
+    "train_examples": 287110,
+    "val_examples": 2000,
+    "warmup_steps": 500,
+    "lr": 5e-05,
+    "weight_decay": 0.01,
+    "label_smoothing": 0.1,
+    "max_grad_norm": 1.0,
+    "max_source_len": 512,
+    "max_target_len": 128,
+    "time_budget_hours": 4.5,
+    "stopped_by_time_budget": true,
+    "train_runtime_hours": 4.5,
+    "final_train_loss": 6.8303,
+    "final_eval_loss": 6.21,
+    "throughput_samples_per_s": 18.76,
+    "log_history": [
+      {
+        "eval_loss": 9.571569442749023,
+        "eval_runtime": 36.4372,
+        "eval_samples_per_second": 54.889,
+        "eval_steps_per_second": 0.878,
+        "epoch": 0,
+        "step": 0
+      },
+      {
+        "loss": 9.837852478027344,
+        "grad_norm": 28.194095611572266,
+        "learning_rate": 1.0000000000000001e-07,
+        "epoch": 0.00011144544745347152,
+        "step": 1
+      },
+      {
+        "loss": 8.43469299932923,
+        "grad_norm": 5.943242073059082,
+        "learning_rate": 9.874642402007258e-06,
+        "epoch": 0.011144544745347153,
+        "step": 100
+      },
+      {
+        "loss": 7.649830322265625,
+        "grad_norm": 5.447493553161621,
+        "learning_rate": 1.9540745134412508e-05,
+        "epoch": 0.022289089490694306,
+        "step": 200
+      },
+      {
+        "loss": 7.4447564697265625,
+        "grad_norm": 4.7950592041015625,
+        "learning_rate": 2.8997438558384226e-05,
+        "epoch": 0.03343363423604146,
+        "step": 300
+      },
+      {
+        "loss": 7.377305908203125,
+        "grad_norm": 5.134828090667725,
+        "learning_rate": 3.824716548743072e-05,
+        "epoch": 0.04457817898138861,
+        "step": 400
+      },
+      {
+        "loss": 7.307684326171875,
+        "grad_norm": 4.4708123207092285,
+        "learning_rate": 4.7290105845457246e-05,
+        "epoch": 0.055722723726735764,
+        "step": 500
+      },
+      {
+        "loss": 7.223123168945312,
+        "grad_norm": 4.933542251586914,
+        "learning_rate": 4.677063304038696e-05,
+        "epoch": 0.06686726847208292,
+        "step": 600
+      },
+      {
+        "loss": 7.202658081054688,
+        "grad_norm": 5.175388813018799,
+        "learning_rate": 4.6251347037745114e-05,
+        "epoch": 0.07801181321743007,
+        "step": 700
+      },
+      {
+        "loss": 7.15745361328125,
+        "grad_norm": 4.447458744049072,
+        "learning_rate": 4.573275263589106e-05,
+        "epoch": 0.08915635796277722,
+        "step": 800
+      },
+      {
+        "loss": 7.104336547851562,
+        "grad_norm": 5.256701469421387,
+        "learning_rate": 4.521554344966088e-05,
+        "epoch": 0.10030090270812438,
+        "step": 900
+      },
+      {
+        "loss": 7.106878662109375,
+        "grad_norm": 4.646457195281982,
+        "learning_rate": 4.469418352842331e-05,
+        "epoch": 0.11144544745347153,
+        "step": 1000
+      },
+      {
+        "eval_loss": 6.566379547119141,
+        "eval_runtime": 35.4815,
+        "eval_samples_per_second": 56.367,
+        "eval_steps_per_second": 0.902,
+        "epoch": 0.11144544745347153,
+        "step": 1000
+      },
+      {
+        "loss": 7.108111572265625,
+        "grad_norm": 4.452223777770996,
+        "learning_rate": 4.406696186315866e-05,
+        "epoch": 0.12258999219881868,
+        "step": 1100
+      },
+      {
+        "loss": 7.042183837890625,
+        "grad_norm": 4.285203456878662,
+        "learning_rate": 4.354588796695074e-05,
+        "epoch": 0.13373453694416584,
+        "step": 1200
+      },
+      {
+        "loss": 6.999068603515625,
+        "grad_norm": 4.5331501960754395,
+        "learning_rate": 4.3025111392692287e-05,
+        "epoch": 0.144879081689513,
+        "step": 1300
+      },
+      {
+        "loss": 7.034176025390625,
+        "grad_norm": 5.48399019241333,
+        "learning_rate": 4.250742501756292e-05,
+        "epoch": 0.15602362643486015,
+        "step": 1400
+      },
+      {
+        "loss": 7.02765625,
+        "grad_norm": 4.194223403930664,
+        "learning_rate": 4.1994971233385584e-05,
+        "epoch": 0.1671681711802073,
+        "step": 1500
+      },
+      {
+        "loss": 6.974520263671875,
+        "grad_norm": 4.349469184875488,
+        "learning_rate": 4.148124088254976e-05,
+        "epoch": 0.17831271592555445,
+        "step": 1600
+      },
+      {
+        "loss": 6.9698291015625,
+        "grad_norm": 4.197545051574707,
+        "learning_rate": 4.0968038399278384e-05,
+        "epoch": 0.1894572606709016,
+        "step": 1700
+      },
+      {
+        "loss": 6.976958618164063,
+        "grad_norm": 4.075440406799316,
+        "learning_rate": 4.044931177371814e-05,
+        "epoch": 0.20060180541624875,
+        "step": 1800
+      },
+      {
+        "loss": 6.934925537109375,
+        "grad_norm": 4.183923721313477,
+        "learning_rate": 3.993035540610184e-05,
+        "epoch": 0.2117463501615959,
+        "step": 1900
+      },
+      {
+        "loss": 6.935366821289063,
+        "grad_norm": 4.243054389953613,
+        "learning_rate": 3.9410818924874436e-05,
+        "epoch": 0.22289089490694305,
+        "step": 2000
+      },
+      {
+        "eval_loss": 6.439103126525879,
+        "eval_runtime": 35.3804,
+        "eval_samples_per_second": 56.528,
+        "eval_steps_per_second": 0.904,
+        "epoch": 0.22289089490694305,
+        "step": 2000
+      },
+      {
+        "loss": 6.899189453125,
+        "grad_norm": 3.933171510696411,
+        "learning_rate": 3.878128661491253e-05,
+        "epoch": 0.2340354396522902,
+        "step": 2100
+      },
+      {
+        "loss": 6.922568969726562,
+        "grad_norm": 4.002138137817383,
+        "learning_rate": 3.826168516020716e-05,
+        "epoch": 0.24517998439763736,
+        "step": 2200
+      },
+      {
+        "loss": 6.9177923583984375,
+        "grad_norm": 4.756917476654053,
+        "learning_rate": 3.7740930753725545e-05,
+        "epoch": 0.25632452914298454,
+        "step": 2300
+      },
+      {
+        "loss": 6.906076049804687,
+        "grad_norm": 3.9144513607025146,
+        "learning_rate": 3.722015216909809e-05,
+        "epoch": 0.2674690738883317,
+        "step": 2400
+      },
+      {
+        "loss": 6.8880987548828125,
+        "grad_norm": 4.05012845993042,
+        "learning_rate": 3.670154904730526e-05,
+        "epoch": 0.27861361863367884,
+        "step": 2500
+      },
+      {
+        "loss": 6.897164916992187,
+        "grad_norm": 4.45239782333374,
+        "learning_rate": 3.6188991083039184e-05,
+        "epoch": 0.289758163379026,
+        "step": 2600
+      },
+      {
+        "loss": 6.883828735351562,
+        "grad_norm": 4.135756969451904,
+        "learning_rate": 3.5675859825110735e-05,
+        "epoch": 0.30090270812437314,
+        "step": 2700
+      },
+      {
+        "loss": 6.861922607421875,
+        "grad_norm": 4.444543361663818,
+        "learning_rate": 3.5160185132497625e-05,
+        "epoch": 0.3120472528697203,
+        "step": 2800
+      },
+      {
+        "loss": 6.836492919921875,
+        "grad_norm": 4.199079990386963,
+        "learning_rate": 3.464503589971566e-05,
+        "epoch": 0.32319179761506744,
+        "step": 2900
+      },
+      {
+        "loss": 6.860537719726563,
+        "grad_norm": 3.8965320587158203,
+        "learning_rate": 3.412581317292319e-05,
+        "epoch": 0.3343363423604146,
+        "step": 3000
+      },
+      {
+        "eval_loss": 6.361603736877441,
+        "eval_runtime": 35.4709,
+        "eval_samples_per_second": 56.384,
+        "eval_steps_per_second": 0.902,
+        "epoch": 0.3343363423604146,
+        "step": 3000
+      },
+      {
+        "loss": 6.79919921875,
+        "grad_norm": 3.9295802116394043,
+        "learning_rate": 3.349717909024086e-05,
+        "epoch": 0.34548088710576175,
+        "step": 3100
+      },
+      {
+        "loss": 6.82876708984375,
+        "grad_norm": 3.978652238845825,
+        "learning_rate": 3.298619935174048e-05,
+        "epoch": 0.3566254318511089,
+        "step": 3200
+      },
+      {
+        "loss": 6.8114691162109375,
+        "grad_norm": 4.094376087188721,
+        "learning_rate": 3.2469495573161565e-05,
+        "epoch": 0.36776997659645605,
+        "step": 3300
+      },
+      {
+        "loss": 6.8225030517578125,
+        "grad_norm": 3.7689809799194336,
+        "learning_rate": 3.1953113047429074e-05,
+        "epoch": 0.3789145213418032,
+        "step": 3400
+      },
+      {
+        "loss": 6.79931884765625,
+        "grad_norm": 3.8574135303497314,
+        "learning_rate": 3.1435917220733786e-05,
+        "epoch": 0.39005906608715035,
+        "step": 3500
+      },
+      {
+        "loss": 6.789891357421875,
+        "grad_norm": 4.0079426765441895,
+        "learning_rate": 3.092085898290446e-05,
+        "epoch": 0.4012036108324975,
+        "step": 3600
+      },
+      {
+        "loss": 6.77822021484375,
+        "grad_norm": 3.8762505054473877,
+        "learning_rate": 3.04038752420449e-05,
+        "epoch": 0.41234815557784466,
+        "step": 3700
+      },
+      {
+        "loss": 6.759611206054688,
+        "grad_norm": 4.03882360458374,
+        "learning_rate": 2.9886900991569335e-05,
+        "epoch": 0.4234927003231918,
+        "step": 3800
+      },
+      {
+        "loss": 6.796593017578125,
+        "grad_norm": 3.8841586112976074,
+        "learning_rate": 2.9374793694343095e-05,
+        "epoch": 0.43463724506853896,
+        "step": 3900
+      },
+      {
+        "loss": 6.816526489257813,
+        "grad_norm": 4.040095806121826,
+        "learning_rate": 2.8860490478851176e-05,
+        "epoch": 0.4457817898138861,
+        "step": 4000
+      },
+      {
+        "eval_loss": 6.343181610107422,
+        "eval_runtime": 35.005,
+        "eval_samples_per_second": 57.135,
+        "eval_steps_per_second": 0.914,
+        "epoch": 0.4457817898138861,
+        "step": 4000
+      },
+      {
+        "loss": 6.755637817382812,
+        "grad_norm": 3.8790180683135986,
+        "learning_rate": 2.8240044544508426e-05,
+        "epoch": 0.45692633455923326,
+        "step": 4100
+      },
+      {
+        "loss": 6.802537841796875,
+        "grad_norm": 4.274333953857422,
+        "learning_rate": 2.7726788033673796e-05,
+        "epoch": 0.4680708793045804,
+        "step": 4200
+      },
+      {
+        "loss": 6.773378295898437,
+        "grad_norm": 3.822556257247925,
+        "learning_rate": 2.7212845953158394e-05,
+        "epoch": 0.47921542404992756,
+        "step": 4300
+      },
+      {
+        "loss": 6.785579833984375,
+        "grad_norm": 3.941030263900757,
+        "learning_rate": 2.6699274906405697e-05,
+        "epoch": 0.4903599687952747,
+        "step": 4400
+      },
+      {
+        "loss": 6.7861785888671875,
+        "grad_norm": 4.155208587646484,
+        "learning_rate": 2.6185005301310695e-05,
+        "epoch": 0.5015045135406219,
+        "step": 4500
+      },
+      {
+        "loss": 6.7468804931640625,
+        "grad_norm": 3.651984930038452,
+        "learning_rate": 2.5671135362283684e-05,
+        "epoch": 0.5126490582859691,
+        "step": 4600
+      },
+      {
+        "loss": 6.790219116210937,
+        "grad_norm": 4.202093124389648,
+        "learning_rate": 2.515928932030996e-05,
+        "epoch": 0.5237936030313162,
+        "step": 4700
+      },
+      {
+        "loss": 6.742855834960937,
+        "grad_norm": 3.867802143096924,
+        "learning_rate": 2.4647947093586865e-05,
+        "epoch": 0.5349381477766634,
+        "step": 4800
+      },
+      {
+        "loss": 6.756275024414062,
+        "grad_norm": 3.770756721496582,
+        "learning_rate": 2.4136469824078646e-05,
+        "epoch": 0.5460826925220105,
+        "step": 4900
+      },
+      {
+        "loss": 6.774432983398437,
+        "grad_norm": 3.9605143070220947,
+        "learning_rate": 2.3623385362419083e-05,
+        "epoch": 0.5572272372673577,
+        "step": 5000
+      },
+      {
+        "eval_loss": 6.285946369171143,
+        "eval_runtime": 35.1801,
+        "eval_samples_per_second": 56.85,
+        "eval_steps_per_second": 0.91,
+        "epoch": 0.5572272372673577,
+        "step": 5000
+      },
+      {
+        "loss": 6.739515380859375,
+        "grad_norm": 4.069912910461426,
+        "learning_rate": 2.3004057442700423e-05,
+        "epoch": 0.5683717820127048,
+        "step": 5100
+      },
+      {
+        "loss": 6.751094360351562,
+        "grad_norm": 3.8238306045532227,
+        "learning_rate": 2.249584447454523e-05,
+        "epoch": 0.579516326758052,
+        "step": 5200
+      },
+      {
+        "loss": 6.74519775390625,
+        "grad_norm": 3.6972410678863525,
+        "learning_rate": 2.198349612436177e-05,
+        "epoch": 0.5906608715033991,
+        "step": 5300
+      },
+      {
+        "loss": 6.732684326171875,
+        "grad_norm": 3.7198526859283447,
+        "learning_rate": 2.1472862105310697e-05,
+        "epoch": 0.6018054162487463,
+        "step": 5400
+      },
+      {
+        "loss": 6.7235345458984375,
+        "grad_norm": 3.6174607276916504,
+        "learning_rate": 2.0962040237438534e-05,
+        "epoch": 0.6129499609940934,
+        "step": 5500
+      },
+      {
+        "loss": 6.7146978759765625,
+        "grad_norm": 3.8562119007110596,
+        "learning_rate": 2.045029664039612e-05,
+        "epoch": 0.6240945057394406,
+        "step": 5600
+      },
+      {
+        "loss": 6.7516796875,
+        "grad_norm": 3.778020143508911,
+        "learning_rate": 1.993966192227823e-05,
+        "epoch": 0.6352390504847877,
+        "step": 5700
+      },
+      {
+        "loss": 6.722349243164063,
+        "grad_norm": 3.6833956241607666,
+        "learning_rate": 1.94271137861558e-05,
+        "epoch": 0.6463835952301349,
+        "step": 5800
+      },
+      {
+        "loss": 6.66942626953125,
+        "grad_norm": 4.056831359863281,
+        "learning_rate": 1.8915255677552875e-05,
+        "epoch": 0.657528139975482,
+        "step": 5900
+      },
+      {
+        "loss": 6.73786376953125,
+        "grad_norm": 3.964282989501953,
+        "learning_rate": 1.8402275485021098e-05,
+        "epoch": 0.6686726847208292,
+        "step": 6000
+      },
+      {
+        "eval_loss": 6.2664971351623535,
+        "eval_runtime": 35.1317,
+        "eval_samples_per_second": 56.929,
+        "eval_steps_per_second": 0.911,
+        "epoch": 0.6686726847208292,
+        "step": 6000
+      },
+      {
+        "loss": 6.697855224609375,
+        "grad_norm": 3.7701241970062256,
+        "learning_rate": 1.7784479209670312e-05,
+        "epoch": 0.6798172294661763,
+        "step": 6100
+      },
+      {
+        "loss": 6.7262158203125,
+        "grad_norm": 3.6566271781921387,
+        "learning_rate": 1.7270055135827008e-05,
+        "epoch": 0.6909617742115235,
+        "step": 6200
+      },
+      {
+        "loss": 6.685335083007812,
+        "grad_norm": 3.845062017440796,
+        "learning_rate": 1.675503205443606e-05,
+        "epoch": 0.7021063189568706,
+        "step": 6300
+      },
+      {
+        "loss": 6.714213256835937,
+        "grad_norm": 3.7093186378479004,
+        "learning_rate": 1.623853340193077e-05,
+        "epoch": 0.7132508637022178,
+        "step": 6400
+      },
+      {
+        "loss": 6.696666870117188,
+        "grad_norm": 3.7065327167510986,
+        "learning_rate": 1.572074388942601e-05,
+        "epoch": 0.7243954084475649,
+        "step": 6500
+      },
+      {
+        "loss": 6.687496948242187,
+        "grad_norm": 3.7346577644348145,
+        "learning_rate": 1.5204714292361411e-05,
+        "epoch": 0.7355399531929121,
+        "step": 6600
+      },
+      {
+        "loss": 6.702255859375,
+        "grad_norm": 3.735537052154541,
+        "learning_rate": 1.4691192371609768e-05,
+        "epoch": 0.7466844979382592,
+        "step": 6700
+      },
+      {
+        "loss": 6.6722314453125,
+        "grad_norm": 3.8463916778564453,
+        "learning_rate": 1.4175285004539257e-05,
+        "epoch": 0.7578290426836064,
+        "step": 6800
+      },
+      {
+        "loss": 6.689879760742188,
+        "grad_norm": 3.5096445083618164,
+        "learning_rate": 1.3661692327187387e-05,
+        "epoch": 0.7689735874289535,
+        "step": 6900
+      },
+      {
+        "loss": 6.681793212890625,
+        "grad_norm": 3.865607500076294,
+        "learning_rate": 1.314562913076377e-05,
+        "epoch": 0.7801181321743007,
+        "step": 7000
+      },
+      {
+        "eval_loss": 6.242771148681641,
+        "eval_runtime": 35.3478,
+        "eval_samples_per_second": 56.581,
+        "eval_steps_per_second": 0.905,
+        "epoch": 0.7801181321743007,
+        "step": 7000
+      },
+      {
+        "loss": 6.684135131835937,
+        "grad_norm": 3.662064552307129,
+        "learning_rate": 1.252229251390622e-05,
+        "epoch": 0.7912626769196478,
+        "step": 7100
+      },
+      {
+        "loss": 6.651861572265625,
+        "grad_norm": 3.63273549079895,
+        "learning_rate": 1.2007412169450594e-05,
+        "epoch": 0.802407221664995,
+        "step": 7200
+      },
+      {
+        "loss": 6.705975952148438,
+        "grad_norm": 3.9129724502563477,
+        "learning_rate": 1.149431887894501e-05,
+        "epoch": 0.8135517664103421,
+        "step": 7300
+      },
+      {
+        "loss": 6.67797119140625,
+        "grad_norm": 3.661863088607788,
+        "learning_rate": 1.0979330453607772e-05,
+        "epoch": 0.8246963111556893,
+        "step": 7400
+      },
+      {
+        "loss": 6.658255615234375,
+        "grad_norm": 3.98260235786438,
+        "learning_rate": 1.0462989775486937e-05,
+        "epoch": 0.8358408559010364,
+        "step": 7500
+      },
+      {
+        "loss": 6.67948974609375,
+        "grad_norm": 3.5660202503204346,
+        "learning_rate": 9.945647837939087e-06,
+        "epoch": 0.8469854006463836,
+        "step": 7600
+      },
+      {
+        "loss": 6.674317016601562,
+        "grad_norm": 3.9099297523498535,
+        "learning_rate": 9.43266952479327e-06,
+        "epoch": 0.8581299453917307,
+        "step": 7700
+      },
+      {
+        "loss": 6.683156127929688,
+        "grad_norm": 4.014496326446533,
+        "learning_rate": 8.92069851027595e-06,
+        "epoch": 0.8692744901370779,
+        "step": 7800
+      },
+      {
+        "loss": 6.65588623046875,
+        "grad_norm": 3.6752660274505615,
+        "learning_rate": 8.40945917294349e-06,
+        "epoch": 0.880419034882425,
+        "step": 7900
+      },
+      {
+        "loss": 6.671046142578125,
+        "grad_norm": 3.568844795227051,
+        "learning_rate": 7.896491291346376e-06,
+        "epoch": 0.8915635796277722,
+        "step": 8000
+      },
+      {
+        "eval_loss": 6.22062349319458,
+        "eval_runtime": 35.2792,
+        "eval_samples_per_second": 56.691,
+        "eval_steps_per_second": 0.907,
+        "epoch": 0.8915635796277722,
+        "step": 8000
+      },
+      {
+        "loss": 6.652386474609375,
+        "grad_norm": 4.059324264526367,
+        "learning_rate": 7.2736243701275464e-06,
+        "epoch": 0.9027081243731193,
+        "step": 8100
+      },
+      {
+        "loss": 6.679384155273437,
+        "grad_norm": 4.216036319732666,
+        "learning_rate": 6.7565425428343435e-06,
+        "epoch": 0.9138526691184665,
+        "step": 8200
+      },
+      {
+        "loss": 6.634822387695312,
+        "grad_norm": 3.7859108448028564,
+        "learning_rate": 6.239165462093588e-06,
+        "epoch": 0.9249972138638136,
+        "step": 8300
+      },
+      {
+        "loss": 6.691995239257812,
+        "grad_norm": 3.7938003540039062,
+        "learning_rate": 5.7223910998415065e-06,
+        "epoch": 0.9361417586091608,
+        "step": 8400
+      },
+      {
+        "loss": 6.659867553710938,
+        "grad_norm": 3.7088992595672607,
+        "learning_rate": 5.210551802758817e-06,
+        "epoch": 0.9472863033545079,
+        "step": 8500
+      },
+      {
+        "loss": 6.65841796875,
+        "grad_norm": 3.7529847621917725,
+        "learning_rate": 4.697655568152298e-06,
+        "epoch": 0.9584308480998551,
+        "step": 8600
+      },
+      {
+        "loss": 6.674441528320313,
+        "grad_norm": 4.381502628326416,
+        "learning_rate": 4.188854335266868e-06,
+        "epoch": 0.9695753928452022,
+        "step": 8700
+      },
+      {
+        "loss": 6.65122802734375,
+        "grad_norm": 3.7526373863220215,
+        "learning_rate": 3.675043340818379e-06,
+        "epoch": 0.9807199375905494,
+        "step": 8800
+      },
+      {
+        "loss": 6.681468505859375,
+        "grad_norm": 3.716545820236206,
+        "learning_rate": 3.163755043053335e-06,
+        "epoch": 0.9918644823358965,
+        "step": 8900
+      },
+      {
+        "loss": 6.590841064453125,
+        "grad_norm": 3.8196849822998047,
+        "learning_rate": 2.6523836968857575e-06,
+        "epoch": 1.0030090270812437,
+        "step": 9000
+      },
+      {
+        "eval_loss": 6.216119766235352,
+        "eval_runtime": 35.1523,
+        "eval_samples_per_second": 56.895,
+        "eval_steps_per_second": 0.91,
+        "epoch": 1.0030090270812437,
+        "step": 9000
+      },
+      {
+        "loss": 6.536103515625,
+        "grad_norm": 3.7616331577301025,
+        "learning_rate": 2.03208706114027e-06,
+        "epoch": 1.0141535718265908,
+        "step": 9100
+      },
+      {
+        "loss": 6.5549609375,
+        "grad_norm": 3.83768367767334,
+        "learning_rate": 1.5200247794021793e-06,
+        "epoch": 1.0252981165719381,
+        "step": 9200
+      },
+      {
+        "loss": 6.514959716796875,
+        "grad_norm": 3.950705051422119,
+        "learning_rate": 1.006213491345631e-06,
+        "epoch": 1.0364426613172852,
+        "step": 9300
+      },
+      {
+        "loss": 6.541298828125,
+        "grad_norm": 4.000138759613037,
+        "learning_rate": 4.961562370076611e-07,
+        "epoch": 1.0475872060626323,
+        "step": 9400
+      },
+      {
+        "train_runtime": 16200.5789,
+        "train_samples_per_second": 53.171,
+        "train_steps_per_second": 1.662,
+        "total_flos": 9.263299194519552e+16,
+        "train_loss": 6.8302739335391935,
+        "epoch": 1.0582859690181656,
+        "step": 9496
+      },
+      {
+        "eval_loss": 6.210020542144775,
+        "eval_runtime": 35.2959,
+        "eval_samples_per_second": 56.664,
+        "eval_steps_per_second": 0.907,
+        "epoch": 1.0582859690181656,
+        "step": 9496
+      }
+    ]
+  },
+  "generation": {
+    "num_beams": 4,
+    "max_new_tokens": 142,
+    "min_new_tokens": 56,
+    "length_penalty": 2.0,
+    "no_repeat_ngram_size": 3,
+    "early_stopping": true,
+    "batch_size": 32,
+    "seconds": 2601.2,
+    "docs_per_second": 4.42
+  },
+  "results": {
+    "lead3": {
+      "n": 11490,
+      "rouge1": 40.17,
+      "rouge1_ci": [
+        39.96,
+        40.4
+      ],
+      "rouge2": 17.56,
+      "rouge2_ci": [
+        17.35,
+        17.78
+      ],
+      "rougeL": 25.09,
+      "rougeL_ci": [
+        24.9,
+        25.28
+      ],
+      "rougeLsum": 36.48,
+      "rougeLsum_ci": [
+        36.27,
+        36.69
+      ],
+      "avg_words": 77.2,
+      "median_words": 77.0,
+      "avg_sentences": 3.0,
+      "novel_ngrams": {
+        "1": 0.0,
+        "2": 0.03,
+        "3": 0.07,
+        "4": 0.1
+      }
+    },
+    "textrank": {
+      "n": 11490,
+      "rouge1": 35.8,
+      "rouge1_ci": [
+        35.62,
+        36.01
+      ],
+      "rouge2": 14.36,
+      "rouge2_ci": [
+        14.2,
+        14.55
+      ],
+      "rougeL": 23.1,
+      "rougeL_ci": [
+        22.95,
+        23.27
+      ],
+      "rougeLsum": 32.17,
+      "rougeLsum_ci": [
+        31.98,
+        32.37
+      ],
+      "avg_words": 85.7,
+      "median_words": 83.0,
+      "avg_sentences": 3.0,
+      "novel_ngrams": {
+        "1": 0.0,
+        "2": 1.99,
+        "3": 4.15,
+        "4": 6.38
+      }
+    },
+    "embed_mmr": {
+      "n": 11490,
+      "rouge1": 34.57,
+      "rouge1_ci": [
+        34.38,
+        34.78
+      ],
+      "rouge2": 12.18,
+      "rouge2_ci": [
+        11.99,
+        12.36
+      ],
+      "rougeL": 21.24,
+      "rougeL_ci": [
+        21.08,
+        21.4
+      ],
+      "rougeLsum": 30.92,
+      "rougeLsum_ci": [
+        30.73,
+        31.13
+      ],
+      "avg_words": 78.5,
+      "median_words": 76.0,
+      "avg_sentences": 3.0,
+      "novel_ngrams": {
+        "1": 0.0,
+        "2": 2.06,
+        "3": 4.39,
+        "4": 6.83
+      }
+    },
+    "finetuned": {
+      "n": 11490,
+      "rouge1": 42.16,
+      "rouge1_ci": [
+        41.94,
+        42.39
+      ],
+      "rouge2": 19.47,
+      "rouge2_ci": [
+        19.23,
+        19.72
+      ],
+      "rougeL": 28.97,
+      "rougeL_ci": [
+        28.75,
+        29.19
+      ],
+      "rougeLsum": 39.13,
+      "rougeLsum_ci": [
+        38.9,
+        39.36
+      ],
+      "avg_words": 62.3,
+      "median_words": 59.0,
+      "avg_sentences": 3.38,
+      "novel_ngrams": {
+        "1": 0.62,
+        "2": 7.25,
+        "3": 13.86,
+        "4": 19.44
+      }
+    },
+    "zero_shot": {
+      "n": 500,
+      "rouge1": 37.09,
+      "rouge1_ci": [
+        36.27,
+        37.93
+      ],
+      "rouge2": 17.05,
+      "rouge2_ci": [
+        16.21,
+        17.94
+      ],
+      "rougeL": 23.34,
+      "rougeL_ci": [
+        22.59,
+        24.12
+      ],
+      "rougeLsum": 34.31,
+      "rougeLsum_ci": [
+        33.51,
+        35.18
+      ],
+      "avg_words": 112.5,
+      "median_words": 113.0,
+      "avg_sentences": 5.25,
+      "novel_ngrams": {
+        "1": 2.02,
+        "2": 5.05,
+        "3": 7.61,
+        "4": 9.45
+      }
+    }
+  },
+  "significance": {
+    "finetuned_vs_lead3": {
+      "rouge1": {
+        "diff": 1.99,
+        "ci": [
+          1.79,
+          2.19
+        ],
+        "p_value": 0.0
+      },
+      "rouge2": {
+        "diff": 1.9,
+        "ci": [
+          1.71,
+          2.12
+        ],
+        "p_value": 0.0
+      },
+      "rougeL": {
+        "diff": 3.88,
+        "ci": [
+          3.69,
+          4.08
+        ],
+        "p_value": 0.0
+      },
+      "rougeLsum": {
+        "diff": 2.65,
+        "ci": [
+          2.44,
+          2.84
+        ],
+        "p_value": 0.0
+      }
+    },
+    "finetuned_vs_textrank": {
+      "rouge1": {
+        "diff": 6.36,
+        "ci": [
+          6.14,
+          6.57
+        ],
+        "p_value": 0.0
+      },
+      "rouge2": {
+        "diff": 5.1,
+        "ci": [
+          4.88,
+          5.34
+        ],
+        "p_value": 0.0
+      },
+      "rougeL": {
+        "diff": 5.87,
+        "ci": [
+          5.68,
+          6.09
+        ],
+        "p_value": 0.0
+      },
+      "rougeLsum": {
+        "diff": 6.96,
+        "ci": [
+          6.74,
+          7.17
+        ],
+        "p_value": 0.0
+      }
+    },
+    "finetuned_vs_embed_mmr": {
+      "rouge1": {
+        "diff": 7.59,
+        "ci": [
+          7.37,
+          7.81
+        ],
+        "p_value": 0.0
+      },
+      "rouge2": {
+        "diff": 7.29,
+        "ci": [
+          7.07,
+          7.51
+        ],
+        "p_value": 0.0
+      },
+      "rougeL": {
+        "diff": 7.73,
+        "ci": [
+          7.51,
+          7.94
+        ],
+        "p_value": 0.0
+      },
+      "rougeLsum": {
+        "diff": 8.2,
+        "ci": [
+          7.98,
+          8.43
+        ],
+        "p_value": 0.0
+      }
+    }
+  },
+  "zero_shot_subset": {
+    "n": 500,
+    "scores": {
+      "lead3": {
+        "rouge1": 40.1,
+        "rouge2": 17.82,
+        "rougeL": 25.29,
+        "rougeLsum": 36.57
+      },
+      "finetuned": {
+        "rouge1": 41.22,
+        "rouge2": 18.85,
+        "rougeL": 28.16,
+        "rougeLsum": 38.17
+      }
+    }
+  },
+  "rouge1_by_article_length": [
+    {
+      "bucket": "55-415 words",
+      "n": 2871,
+      "lead3": 42.46,
+      "textrank": 38.78,
+      "finetuned": 44.57
+    },
+    {
+      "bucket": "415-606 words",
+      "n": 2874,
+      "lead3": 41.1,
+      "textrank": 36.86,
+      "finetuned": 42.86
+    },
+    {
+      "bucket": "606-866 words",
+      "n": 2872,
+      "lead3": 39.37,
+      "textrank": 34.48,
+      "finetuned": 41.3
+    },
+    {
+      "bucket": "866-1881 words",
+      "n": 2873,
+      "lead3": 37.75,
+      "textrank": 33.09,
+      "finetuned": 39.91
+    }
+  ],
+  "timing_seconds": {
+    "lead3": 6.6,
+    "textrank": 19.1,
+    "embed_mmr": 88.4,
+    "finetuned": 2601.2
+  },
+  "samples": [
+    {
+      "id": "c817b575791dc71db2b11acbf11ccf38b15039ca",
+      "article_excerpt": "UEFA has opened a real can of worms by ordering the final 18 seconds of the European Women's Under 19 Championship qualifier between England and Norway to be replayed following a refereeing error. However, FIFA did something similar during a 2006 World Cup qualifier. Back in 2005 Uzbekistan were playing Bahrain in the Asian zone fourth-round play-off first leg when Japanese referee Toshimitsu Yoshida incorrectly awarded an indirect free-kick to Bahrain after the Uzbeks had encroached at their penalty kick when 1-0 up. This happened in the 38th minute and FIFA ordered that the entire match be replayed which did not please either team. England are awarded a penalty during their European U19 Women's Championships qualifier in Belfast. Referee Marija ...",
+      "reference": "UEFA have ordered the final 18 seconds of the European Women's U19 Championship qualifier between England and Norway to be replayed.\nReferee Marija Kurtes incorrectly awarded an indirect free kick after disallowing an England penalty for encroachment.\nFIFA did something similar during a 2006 World Cup qualifier.\nBut the entire match between Uzbekistan and Bahrain was replayed.\nUEFA must hope it doesn't affect one of their premiere tournaments.",
+      "lead3": {
+        "summary": "UEFA has opened a real can of worms by ordering the final 18 seconds of the European Women's Under 19 Championship qualifier between England and Norway to be replayed following a refereeing error.\nHowever, FIFA did something similar during a 2006 World Cup qualifier.\nBack in 2005 Uzbekistan were playing Bahrain in the Asian zone fourth-round play-off first leg when Japanese referee Toshimitsu Yoshida incorrectly awarded an indirect free-kick to Bahrain after the Uzbeks had encroached at their penalty kick when 1-0 up.",
+        "rouge1": 57.0,
+        "rouge2": 39.7,
+        "rougeLsum": 54.4
+      },
+      "textrank": {
+        "summary": "UEFA has opened a real can of worms by ordering the final 18 seconds of the European Women's Under 19 Championship qualifier between England and Norway to be replayed following a refereeing error.\nFinal 18 seconds of England match to be replayed after ref disallowed penalty for encroachment... and gave indirect free-kick instead.\nNow, UEFA has upheld England’s appeal and ordered that in an evolution of the FIFA decision in 2005, the game should be replayed from the moment the technical error occurred.",
+        "rouge1": 50.0,
+        "rouge2": 27.3,
+        "rougeLsum": 44.9
+      },
+      "finetuned": {
+        "summary": "UEFA ordered the final 18 seconds of the European Women's Under 19 Championship qualifier between England and Norway to be replayed. FIFA did something similar during a 2006 World Cup qualifier. Back in 2005 Uzbekistan were playing Bahrain in the Asian zone fourth-round play-off first leg when Japanese referee Toshimitsu Yoshida incorrectly awarded an indirect free-kick to Bahrain after the Uzbeks had encroached at their penalty kick when 1-0 up. This happened in the 38th minute and FIFA ordered that the entire match was replayed which did not please either team.",
+        "rouge1": 59.0,
+        "rouge2": 41.5,
+        "rougeLsum": 56.6
+      }
+    },
+    {
+      "id": "d65cb29b3a3484836928db5cfa40d1be009e11be",
+      "article_excerpt": "A man who launched an online campaign to help him destroy his brand new $49,000 Jeep will read out a 'not sorry' apology to the company on national television tonight. In June last year, Ashton Wood raised $18,000 online so he and 300 people could destroy his car after Jeep refused to pay a full refund for the car or replace the vehicle which he claimed had suffered 21 separate mechanical problems. During a failed settlement between the manufacturer, Fiat Chrysler Automobiles' Jeep, and Mr Wood, one of the requests made by the car company was for the disgruntled buyer to publish an 'apology' in a national publication. However, because no one would publish the apology, he will instead read ...",
+      "reference": "Ashton Wood has issued a tongue-in-cheek apology to Jeep and will read it out on ABC TV's The Checkout tonight.\nThe car company requested he apologise for slamming them after he was not given a refund or replacement for a faulty vehicle he bought in 2010.\nMr Wood instead launched an online campaign to destroy his $49,000 car.\nHe is now campaigning to introduce Lemon Laws in Australia.\nA spokesperson for Jeep said 'we have and always will treat Mr Wood in a fair and professional manner'",
+      "lead3": {
+        "summary": "A man who launched an online campaign to help him destroy his brand new $49,000 Jeep will read out a 'not sorry' apology to the company on national television tonight.\nIn June last year, Ashton Wood raised $18,000 online so he and 300 people could destroy his car after Jeep refused to pay a full refund for the car or replace the vehicle which he claimed had suffered 21 separate mechanical problems.\nDuring a failed settlement between the manufacturer, Fiat Chrysler Automobiles' Jeep, and Mr Wood, one of the requests made by the car company was for the disgruntled buyer to publish an 'apology' in a national publication.",
+        "rouge1": 48.8,
+        "rouge2": 15.1,
+        "rougeLsum": 45.8
+      },
+      "textrank": {
+        "summary": "In June last year, Ashton Wood raised $18,000 online so he and 300 people could destroy his car after Jeep refused to pay a full refund for the car or replace the vehicle which he claimed had suffered 21 separate mechanical problems.\nCompiled by Mr Wood and the ABC's The Checkout, the apology reads: 'My personal apology to Jeep: I'm Sorry.\nA spokesperson for Jeep told Daily Mail Australia 'we never comment on individual cases except to say we have and always will treat Mr Wood in a fair and professional manner' 'The car was spinning in the air with the auger through the top of the roof,' Mr Wood said.",
+        "rouge1": 53.7,
+        "rouge2": 24.6,
+        "rougeLsum": 45.9
+      },
+      "finetuned": {
+        "summary": "Ashton Wood launched an online campaign to help him destroy his brand new $49,000 Jeep Cherokee. He raised $18,000 online so he and 300 people could destroy his car after Jeep refused to pay a full refund for the car or replace the vehicle which he claimed had suffered 21 separate mechanical problems. Mr Wood launched a Kickstarter campaign last year in an effort to raise $22,500 - the amount Chrysler offered him to buyback the car - and allow donors the chance to be involved in the car's destruction. He is now campaigning for the United State's Lemon laws to be introduced in Australia.",
+        "rouge1": 47.2,
+        "rouge2": 15.2,
+        "rougeLsum": 44.2
+      }
+    },
+    {
+      "id": "8cb5e2d2d9ccf8334d922359adc7340de9a29b7c",
+      "article_excerpt": "Everton manager Roberto Martinez insists he is not concerned that Romelu Lukaku has joined forces with high-powered agent Mino Raiola ahead of a potential summer of transfer speculation surrounding the striker. Raiola, steeped in Italian and Dutch football, is one of the most influential agents in the game, with Paris Saint-Germain striker Zlatan Ibrahimovic, Juventus midfielder Paul Pogba and Liverpool’s Mario Balotelli among his high-profile clients. The Italian middleman has been involved in transfer deals worth over £400million and Lukaku’s decision to sever his links with Christophe Henrotay, who oversaw his Everton club record £28m move from Chelsea last summer, adds a possible new dimension to his career. Romelu Lukaku (left) poses alongside his new agent Mino Raiola in an ...",
+      "reference": "Roberto Martinez unconcerned by Romelu Lukaku's link with Mino Raiola.\nRaiola has been involved in transfer deals worth over £400million.\nMartinez backs Ross Barkley to learn from his difficult season.",
+      "lead3": {
+        "summary": "Everton manager Roberto Martinez insists he is not concerned that Romelu Lukaku has joined forces with high-powered agent Mino Raiola ahead of a potential summer of transfer speculation surrounding the striker.\nRaiola, steeped in Italian and Dutch football, is one of the most influential agents in the game, with Paris Saint-Germain striker Zlatan Ibrahimovic, Juventus midfielder Paul Pogba and Liverpool’s Mario Balotelli among his high-profile clients.\nThe Italian middleman has been involved in transfer deals worth over £400million and Lukaku’s decision to sever his links with Christophe Henrotay, who oversaw his Everton club record £28m move from Chelsea last summer, adds a possible new dimension to his career.",
+        "rouge1": 30.6,
+        "rouge2": 18.3,
+        "rougeLsum": 30.6
+      },
+      "textrank": {
+        "summary": "Everton manager Roberto Martinez insists he is not concerned that Romelu Lukaku has joined forces with high-powered agent Mino Raiola ahead of a potential summer of transfer speculation surrounding the striker.\nRoberto Martinez, the Everton manager, is unconcerned by Lukaku joining Raiola.\nWith Everton 13th in the Barclays Premier League there will be no European adventure next season but Martinez, who persuaded Lukaku to turn a season-long loan into a permanent five-year deal last summer, is adamant that the player’s switch of agents has not set the alarm bells ringing.",
+        "rouge1": 28.8,
+        "rouge2": 6.5,
+        "rougeLsum": 27.2
+      },
+      "finetuned": {
+        "summary": "Romelu Lukaku has joined forces with high-powered agent Mino Raiola. Raiola is one of the most influential agents in the game, with Zlatan Ibrahimovic, Paul Pogba and Mario Balotelli among his high-profile clients. The Italian middleman has been involved in transfer deals worth over £400million and Lukaku's decision to sever his links with Christophe Henrotay adds a possible new dimension to his career.",
+        "rouge1": 39.2,
+        "rouge2": 27.4,
+        "rougeLsum": 39.2
+      }
+    },
+    {
+      "id": "f90198b65cb2366fd648d791277d4b763a89cc69",
+      "article_excerpt": "Tottenham are pressing ahead with talks over a bumper new contact for midfielder Nabil Bentaleb. Securing the future of the Algerian international has moved up the Spurs hierarchy's agenda amid fears his performances will attract unwanted attention. Talks over a new deal are progressing, but Tottenham want the contract concluded sooner rather than later. Tottenham will offer Nabil Bentaleb a new deal in order to ward off interest from rival teams. Clubs from across Europe are monitoring the Algeria international's situation at White Hart Lane. Clubs from across Europe are known to be monitoring the situation and could move if the discussions continue to drag on. His current deal expires in the summer of 2018, but given his importance to ...",
+      "reference": "Nabil Bentaleb is locked in talks with Tottenham over a new contract.\nTottenham are keen on tying the Algeria international to new deal.\nSpurs plan on offering Bentaleb new £35,000-per-week deal.\nClubs from across Europe are monitoring Bentaleb's situation.\nREAD: Danny Rose wanted by Man City but Spurs will fight to keep him.",
+      "lead3": {
+        "summary": "Tottenham are pressing ahead with talks over a bumper new contact for midfielder Nabil Bentaleb.\nSecuring the future of the Algerian international has moved up the Spurs hierarchy's agenda amid fears his performances will attract unwanted attention.\nTalks over a new deal are progressing, but Tottenham want the contract concluded sooner rather than later.",
+        "rouge1": 37.5,
+        "rouge2": 9.1,
+        "rougeLsum": 30.4
+      },
+      "textrank": {
+        "summary": "Talks over a new deal are progressing, but Tottenham want the contract concluded sooner rather than later.\nTottenham will offer Nabil Bentaleb a new deal in order to ward off interest from rival teams.\nClubs from across Europe are monitoring the Algeria international's situation at White Hart Lane.",
+        "rouge1": 56.6,
+        "rouge2": 23.1,
+        "rougeLsum": 50.9
+      },
+      "finetuned": {
+        "summary": "Tottenham are pressing ahead with talks over a bumper new contact for Nabil Bentaleb. Talks over a new deal are progressing, but Tottenham want the contract concluded sooner rather than later. Clubs from across Europe are monitoring the Algerian international's situation at White Hart Lane. His current deal expires in the summer of 2018, but the club want to improve his contract.",
+        "rouge1": 46.7,
+        "rouge2": 18.6,
+        "rougeLsum": 38.3
+      }
+    },
+    {
+      "id": "f588be66f67386056c4f771af390a1845a702415",
+      "article_excerpt": "Ali Addeh refugee camp, Djibouti (CNN)Henol and Mebratu emerge from their current home, a modest structure with plastic sheeting serving as its roof, carrying the \"master folder.\" One of the most important documents on the camp, it's a record of each Eritrean's name and their case -- whether they've been granted refugee status, whether they've had their resettlement interview, whether they've attempted the journey to Europe by sea, and whether they've survived it. By the rows of names, red dots are marked to signify the dead. In the past few days, news -- from the network of friends and family across the world -- came in that 20 new dots needed to be scratched in -- for the 20 friends ...",
+      "reference": "For 25 years, Ali Addeh refugee camp has been a holding point for those fleeing into Djibouti.\nMany come from Somalia, Ethiopia and especially Eritrea -- which is ruled by a one-party state.\nDespite the risks, Eritrean refugees say they'd risk their lives with people smugglers.",
+      "lead3": {
+        "summary": "Ali Addeh refugee camp, Djibouti (CNN)Henol and Mebratu emerge from their current home, a modest structure with plastic sheeting serving as its roof, carrying the \"master folder.\"\nOne of the most important documents on the camp, it's a record of each Eritrean's name and their case -- whether they've been granted refugee status, whether they've had their resettlement interview, whether they've attempted the journey to Europe by sea, and whether they've survived it.\nBy the rows of names, red dots are marked to signify the dead.",
+        "rouge1": 25.9,
+        "rouge2": 4.4,
+        "rougeLsum": 23.0
+      },
+      "textrank": {
+        "summary": "Ali Addeh refugee camp, Djibouti (CNN)Henol and Mebratu emerge from their current home, a modest structure with plastic sheeting serving as its roof, carrying the \"master folder.\"\nHenol's friend Soloman was among the hundreds who lost their lives this week when their boat capsized in the Mediterranean en route to Europe, he tells me.\nThey'd grown up together -- even made the risky journey to Djibouti together.",
+        "rouge1": 24.1,
+        "rouge2": 8.8,
+        "rougeLsum": 22.4
+      },
+      "finetuned": {
+        "summary": "Ali Addeh refugee camp, Djibouti, borders Eritrea, Ethiopia and Somalia. For 10,000 residents, this is supposed to be just the first stop on their journey to resettlement through the United Nations. Many say it's been years and they're tired of waiting. For those willing to pay, there's another route to a new life.",
+        "rouge1": 40.4,
+        "rouge2": 9.8,
+        "rougeLsum": 30.8
+      }
+    }
+  ],
+  "custom_cases": [
+    {
+      "name": "01_news_electric_buses",
+      "words": 242,
+      "tokens": 285,
+      "mode": "single pass, adaptive length",
+      "seconds": 0.83,
+      "abstractive": "The municipal corporation of a mid-sized hill city has approved a plan to replace its entire diesel bus fleet with 120 electric buses by the end of 2028. The first batch of 30 buses is expected to arrive in March and will run on the four busiest routes. The project will cost an estimated 210 crore rupees, with roughly half the money coming from a national clean-transport grant and the rest from a low-interest loan.",
+      "textrank": "The municipal corporation of a mid-sized hill city has approved a plan to replace its entire diesel bus fleet with 120 electric buses by the end of 2028, officials said on Monday.\nTransport officials said the switch would cut the corporation's fuel bill by nearly 40 per cent and remove around 9,000 tonnes of carbon dioxide emissions every year.\nThe corporation said a trial with two leased buses had already covered 18,000 kilometres without a single breakdown, and that the tender requires manufacturers to guarantee a range of at least 220 kilometres on a single charge under full load.",
+      "lead3": "The municipal corporation of a mid-sized hill city has approved a plan to replace its entire diesel bus fleet with 120 electric buses by the end of 2028, officials said on Monday.\nThe first batch of 30 buses is expected to arrive in March and will run on the four busiest routes, which together carry about 65,000 passengers a day.\nThe project will cost an estimated 210 crore rupees, with roughly half the money coming from a national clean-transport grant and the rest from a low-interest loan.",
+      "novel_unigrams_pct": 0.0,
+      "novel_bigrams_pct": 2.63
+    },
+    {
+      "name": "02_news_flood_warning_system",
+      "words": 252,
+      "tokens": 299,
+      "mode": "single pass, adaptive length",
+      "seconds": 0.67,
+      "abstractive": "The system combines rainfall readings from 140 automatic weather stations with water-level sensors installed on 26 bridges and embankments. A hydrological model updates forecasts every hour and sends alerts in Hindi, English and two tribal languages to registered mobile numbers in the affected blocks. Officials said the pilot ran in three districts during last year's monsoon.",
+      "textrank": "Villages along a flood-prone river basin in eastern India will receive flood warnings by SMS and voice call up to 36 hours in advance under a new early-warning system launched by the state disaster management authority on Thursday.\nOfficials said the pilot, which ran in three districts during last year's monsoon, sent 41 alerts and correctly predicted 37 of the 39 floods that occurred, with an average lead time of 22 hours.\nA hydrologist who reviewed the pilot said the authority should publish its accuracy figures every season and explain every false alarm publicly, so that villagers do not start ignoring the messages.",
+      "lead3": "Villages along a flood-prone river basin in eastern India will receive flood warnings by SMS and voice call up to 36 hours in advance under a new early-warning system launched by the state disaster management authority on Thursday.\nThe system combines rainfall readings from 140 automatic weather stations with water-level sensors installed on 26 bridges and embankments.\nA hydrological model updates forecasts every hour and sends alerts in Hindi, English and two tribal languages to registered mobile numbers in the affected blocks.",
+      "novel_unigrams_pct": 0.0,
+      "novel_bigrams_pct": 3.51
+    },
+    {
+      "name": "03_research_abstract",
+      "words": 184,
+      "tokens": 233,
+      "mode": "single pass, adaptive length",
+      "seconds": 0.69,
+      "abstractive": "Large language models are increasingly deployed to summarize scientific articles, yet their summaries frequently contain statements that are not supported by the source document. We study how the length of the input context affects the factual consistency of abstractive summaries of biomedical papers. We construct a benchmark of 2,400 open-access articles paired with expert-written lay summaries.",
+      "textrank": "We construct a benchmark of 2,400 open-access articles paired with expert-written lay summaries and annotate 9,600 model-generated sentences for unsupported claims.\nWe compare three strategies for handling documents that exceed the model's context window: truncation to the first 1,024 tokens, retrieval of the most relevant sections, and hierarchical summarization in which each section is summarized independently before a final summary is produced.\nHierarchical summarization improves ROUGE-L by 2.1 points over truncation and reduces the rate of unsupported sentences from 18.4 per cent to 11.7 per cent, whereas retrieval gives smaller gains on both measures.",
+      "lead3": "Large language models are increasingly deployed to summarize scientific articles, yet their summaries frequently contain statements that are not supported by the source document.\nIn this work we study how the length of the input context affects the factual consistency of abstractive summaries of biomedical papers.\nWe construct a benchmark of 2,400 open-access articles paired with expert-written lay summaries and annotate 9,600 model-generated sentences for unsupported claims.",
+      "novel_unigrams_pct": 0.0,
+      "novel_bigrams_pct": 1.72
+    },
+    {
+      "name": "04_long_paper_token_pruning",
+      "words": 838,
+      "tokens": 1037,
+      "mode": "long-document map-reduce: 3 chunks, 1 round(s)",
+      "seconds": 1.89,
+      "abstractive": "Adaptive Token Pruning for Efficient Transformer Inference on Edge Devices. Transformer models achieve strong accuracy on language and vision tasks, but their inference cost grows quadratically with the number of input tokens. Adaptive token pruning offers a simple way to make transformer inference cheaper on edge devices. Future work will extend the approach to encoder-decoder models and combine it with weight quantization.",
+      "textrank": "We propose an adaptive token pruning method that removes uninformative tokens layer by layer, using a lightweight scoring head trained jointly with the model.\nOn the text benchmarks, adaptive pruning reduces average latency by 38 per cent on the smartphone and 44 per cent on the single-board computer, with an average accuracy drop of 0.6 percentage points.\nOn the image benchmark, adaptive pruning removes on average 61 per cent of the patches by the final layer and reduces latency by 52 per cent with a top-1 accuracy drop of 0.9 points.",
+      "lead3": "Adaptive Token Pruning for Efficient Transformer Inference on Edge Devices\nTransformer models achieve strong accuracy on language and vision tasks, but their inference cost grows quadratically with the number of input tokens, which makes deployment on phones and embedded boards difficult.\nWe propose an adaptive token pruning method that removes uninformative tokens layer by layer, using a lightweight scoring head trained jointly with the model.",
+      "novel_unigrams_pct": 0.0,
+      "novel_bigrams_pct": 5.26,
+      "partial_summaries": [
+        [
+          "Adaptive Token Pruning for Efficient Transformer Inference on Edge Devices. Transformer models achieve strong accuracy on language and vision tasks, but their inference cost grows quadratically with the number of input tokens. We propose an adaptive token pruning method that removes uninformative tokens layer by layer, using a lightweight scoring head trained jointly with the model. On three text classification benchmarks and one image classification benchmark, the method reduces inference latency by 38 to 52 per cent",
+          "We evaluate the method on three text benchmarks covering sentiment analysis, topic classification and natural language inference. For text we fine-tune a twelve-layer encoder with 110 million parameters. For images we use a vision transformer of similar size that splits each image into 196 patches. Latency is measured on a mid-range smartphone processor and on a single-board computer.",
+          "Adaptive token pruning offers a simple way to make transformer inference cheaper on edge devices. Future work will extend the approach to encoder-decoder models and combine it with weight quantization."
+        ]
+      ]
+    }
+  ],
+  "figures": {
+    "lengths": "results/figures/fig_lengths.png",
+    "training_curves": "results/figures/fig_training_curves.png",
+    "rouge": "results/figures/fig_rouge_comparison.png",
+    "novelty_length": "results/figures/fig_novelty_and_length.png"
+  },
+  "total_runtime_hours": 5.62
+}
