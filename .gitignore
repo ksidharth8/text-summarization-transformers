@@ -1,0 +1,19 @@
+# trained models are too large for git (use Kaggle output / GitHub Releases / Hugging Face Hub)
+models/
+*.safetensors
+*.bin
+*.pt
+*.zip
+outputs/
+checkpoints/
+data/
+results/test_predictions.csv
+# python / jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
+venv/
+.env
+.DS_Store
